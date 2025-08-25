@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     }, isConfirmed : { 
         type : Boolean , 
         default : false 
+    },role : { 
+        type : String , 
+        default : "user",
+        enum : ["user" , "admin" ]
     }
 
 },{

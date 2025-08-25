@@ -1,12 +1,13 @@
 import { userModel } from "../../../db/models/Users.model.js";
 import bcrypt from "bcrypt" ;
+import jwt from "jsonwebtoken";
 
 export const getUsers = async (req , res )  => {
     try { 
         const users = await userModel.find() ; 
         res.status(200).json({
             message : "sucess" ,
-            Posts : users,
+            Users : users,
         })
     }catch (error) {
         res.status(500).json({message : "there is an error" , error : error.message});
@@ -15,7 +16,6 @@ export const getUsers = async (req , res )  => {
 //adding user (register)
 export const register = async (req , res) => {
     try{  
-
         req.body.password = await bcrypt.hash(req.body.password , 8)
         const newUser = await userModel.insertOne(req.body) ;
         newUser.password = undefined ;
@@ -32,8 +32,9 @@ export const userLogin = async ( req ,res ) => {
         if(!exist) return res.json({message : "this email is not found"}) ;
         const passwordMatched = await bcrypt.compare(req.body.password , exist.password) ; 
         if(!passwordMatched) return res.json({message : "the entered password is wrong"}) ;
+        const token = jwt.sign({_id : exist._id , role: exist.role} , 'samadony' ); 
         
-        res.json({message : `welcome ${exist.userName}`})
+        res.json({message : `welcome ${exist.userName}`}, token)
 
     }catch(error){
 
@@ -50,7 +51,7 @@ export const updateUser = async (req, res) => {
         if (!updatedUser) {
       return res.status(404).json({ message: "user not found" });
     }
-    res.status(201).json({message : "user is not found"})
+    res.status(201).json({message : "user is not found and updated"})
 
     }catch(error) { 
         res.status(500).json({message : "there is an error", error : error.message})
