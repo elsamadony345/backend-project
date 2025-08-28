@@ -10,7 +10,10 @@ export const productsRoutes = express.Router();
 
 
 productsRoutes.get("/product", getProducts) ;
+
 productsRoutes.post("/product",verifyToken ,createProduct) ;
+
 productsRoutes.patch('/product/:id' ,verifyToken, updateProduct) ; 
+
 productsRoutes.delete('/product/:id', verifyToken ,deleteProduct) ;
 
