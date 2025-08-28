@@ -33,7 +33,7 @@ export const createProduct = async (req ,res ) => {
 export const updateProduct = async (req, res ) => {
     try{
         const {id} = req.params ;
-        const updatedProduct = await productsModel.findOneAndUpdate( {_id : id , creator : req.decoded._id} , updateProduct.title , { 
+        const updatedProduct = await productsModel.findOneAndUpdate( {_id : id } , updateProduct.title , { 
             new : true 
         })
         if(!updateProduct) return res.json({message : "product is not found"}); 
@@ -47,11 +47,11 @@ export const updateProduct = async (req, res ) => {
 export const deleteProduct = async (req ,res) => {
     try{
         const {id} = req.params ; 
-        const deletedProduct = await productsModel.findOneAndDelete({_id : id  , creator : req.decoded._id } , deletedProduct.title) ;
+        const deletedProduct = await productsModel.findOneAndDelete({_id : id }) ;
         if(!deleteProduct) return res.status(404).json({message : "the product is not found"}) ; 
-         res.json({message : `the product of title : " ${deleteProduct.title} " has been deleted `})
+         res.json({message : `the product of title : " ${deletedProduct.title} " has been deleted `})
 
     }catch (err) { 
-        res.status(500).res.json({message : "there is an erro" , err : err.message})
+        res.status(500).json({message : "there is an error" , err : err.message})
     }
 }
